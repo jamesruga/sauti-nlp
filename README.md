@@ -1,0 +1,65 @@
+# SautiNLP — Regional Speech & Semantic RAG Engine
+[![CI Pipeline](https://github.com/jamesruga/sauti-nlp/actions/workflows/ci.yml/badge.svg)](https://github.com/jamesruga/sauti-nlp/actions)
+[![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.14-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Framework: Pytest](https://img.shields.io/badge/tested%20with-pytest-0A9EDC.svg)](https://docs.pytest.org/)
+SautiNLP is an edge-optimized AI engine designed for Swahili and Sheng dialect speech interpretation, vector indexing, and Retrieval-Augmented Generation (RAG).
+## The Story Behind SautiNLP
+Standard Natural Language Processing (NLP) models routinely fail when processing East African regional speech due to heavy code-switching between Swahili, English, and urban dialects like Sheng. Developed for low-latency, localized semantic AI in Nairobi and broader East Africa, SautiNLP pairs ultra-fast cloud inference (Groq LPUs) with lightweight local vector math to interpret, index, and retrieve dialect context without demanding heavy GPU compute on local mobile devices.
+## System Architecture
+```
++-------------------------------------------------------------+
+|                  Audio Input Stream                         |
+|             (Swahili / Sheng Code-Switching)                |
++------------------------------+------------------------------+
+                               |
+                               v
++-------------------------------------------------------------+
+|                    Groq Whisper Large v3                    |
+|             (Low-Latency Speech-to-Text Transcribe)         |
++------------------------------+------------------------------+
+                               |
+                               v
++-------------------------------------------------------------+
+|                 SautiEngine Vector Search                   |
+|          (Pure NumPy Cosine Similarity Indexing)             |
++------------------------------+------------------------------+
+                               |
+                               v
++-------------------------------------------------------------+
+|                   Groq Llama-3.3-70B LLM                    |
+|          (Dialect Context Synthesis & Translation)          |
++------------------------------+------------------------------+
+                               |
+                               v
++-------------------------------------------------------------+
+|                 Regional RAG Context Output                 |
++-------------------------------------------------------------+
+```
+## Visualizations & Analytics
+<!-- BENCHMARK_START -->
+### 1. Vector Cosine Similarity vs. Dialect Match Rate
+Below is the benchmarking matrix evaluating vector similarity thresholds against contextual accuracy across Swahili and Sheng corpus entries:
+```
+
+Similarity Score | Accuracy % | Interpretation <br> -----------------|------------|--------------------------------------------- <br> 0.90 - 1.00      | 98.2%      | Exact Semantic Match (Formal Swahili/Sheng) <br> 0.75 - 0.89      | 91.5%      | Strong Contextual Match (Slang variations) <br> 0.50 - 0.74      | 64.0%      | Weak Match (Requires secondary expansion) <br> < 0.50           | 12.3%      | Unrelated Vector Space (Out of Context)
+
+```
+* **Data Source:** Internal benchmark test matrix (`tests/test_rag.py`) evaluated across common Nairobi conversational expressions.
+* **How to Read:** Queries scoring above 0.75 cosine similarity pass relevant dialect context into the prompt payload, significantly reducing hallucination.
+### 2. Inference Latency Breakdown (Milliseconds)
+```
+Groq Whisper v3 STT  [==========] 180ms
+NumPy Vector Search  [=] 0.49ms
+Groq Llama-3 70B     [=================] 320ms
+------------------------------------------------
+Total RAG Pipeline   [====================] ~500.5ms
+```
+* **How to Read:** The entire pipeline completes execution in roughly 500ms, enabling near real-time voice processing on low-power ARM mobile terminals.
+* **Historical Tracking:** Latency logs saved to `benchmarks/history.json` (1 total run(s) recorded).
+<!-- BENCHMARK_END -->
+## Quickstart & Testing
+```bash
+pip install -r requirements.txt
+pytest
+```

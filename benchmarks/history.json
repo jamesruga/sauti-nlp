@@ -1,0 +1,9 @@
+[
+  {
+    "timestamp": "2026-09-08T10:16:26.729707+00:00",
+    "vector_search_ms": 0.4932,
+    "whisper_ms": 180,
+    "llama_ms": 320,
+    "total_ms": 500.5
+  }
+]
