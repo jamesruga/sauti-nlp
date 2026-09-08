@@ -26,7 +26,7 @@ jobs:
 
     - name: Run Pytest Suite
       run: |
-        pytest
+        PYTHONPATH=src pytest
 
     - name: Run Dynamic Benchmark Updates
       run: |
