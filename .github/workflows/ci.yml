@@ -1,47 +1,40 @@
-name: SautiNLP CI
+name: CI Pipeline
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  test:
+  test-and-benchmark:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.11"]
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/python-3.11
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: '3.11'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install numpy; fi
+          pip install -r requirements.txt
 
-      - name: Validate Module Imports
+      - name: Run Pytest Suite
+        run: pytest
+
+      - name: Execute Benchmark & Update Visualizations
         run: |
-          PYTHONPATH=src python -c "from sauti_rag import SautiEngine; engine = SautiEngine(); print('Engine imported successfully!')"
+          PYTHONPATH=src python scripts/update_benchmarks.py
 
-      - name: Run Vector Similarity & Engine Sanity Tests
+      - name: Auto-commit Benchmark Updates
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
-          PYTHONPATH=src python -c "
-          import numpy as np
-          from sauti_rag import SautiEngine
-
-          engine = SautiEngine()
-          engine.add_document('doc_1', 'Sheng test', [1.0, 0.0])
-          results = engine.retrieve_context([1.0, 0.0], top_k=1)
-          
-          assert len(results) > 0, 'Retrieval returned empty results'
-          print('Engine Retrieval Test: PASSED')
-          "
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add README.md benchmarks/history.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update benchmark metrics [skip ci]" && git push)

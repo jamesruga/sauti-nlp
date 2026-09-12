@@ -14,12 +14,9 @@ def run_benchmarks():
     vec_start = time.time()
     results = engine.search("noma", top_k=1)
     vec_latency = (time.time() - vec_start) * 1000
-    
     total_latency = (time.time() - start_time) * 1000
     
-    print(f"Vector Latency: {vec_latency:.2f}ms")
-    
-    # Save to history.json
+    # Update benchmarks/history.json
     os.makedirs("benchmarks", exist_ok=True)
     history_file = "benchmarks/history.json"
     history = []
@@ -39,7 +36,24 @@ def run_benchmarks():
     with open(history_file, "w") as f:
         json.dump(history, f, indent=2)
         
-    print("Benchmark run logged to benchmarks/history.json successfully!")
+    print(f"Logged run #{len(history)} to benchmarks/history.json")
+
+    # Update README.md visualizations
+    readme_path = "README.md"
+    if os.path.exists(readme_path):
+        with open(readme_path, "r") as f:
+            content = f.read()
+
+        # Update historical run count in README
+        updated_content = re.sub(
+            r"Historical Tracking:\*\* Latency logs saved to `benchmarks/history.json` \(\d+ total run\(s\) recorded\)",
+            f"Historical Tracking:** Latency logs saved to `benchmarks/history.json` ({len(history)} total run(s) recorded)",
+            content
+        )
+
+        with open(readme_path, "w") as f:
+            f.write(updated_content)
+        print("Updated README.md benchmark metrics!")
 
 if __name__ == "__main__":
     run_benchmarks()
