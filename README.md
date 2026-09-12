@@ -63,3 +63,22 @@ Total RAG Pipeline   [====================] ~500.5ms
 pip install -r requirements.txt
 pytest
 ```
+
+
+---
+
+## 🏗️ Technical Architecture & Enhancements
+
+* **Dynamic Local RAG Engine:** Vector retrieval executing in pure Python/NumPy using Cosine Similarity for low-latency edge computing.
+* **Groq Model Auto-Discovery:** Automated runtime endpoint resolution to handle dynamic provider updates without model deprecation errors.
+* **Automated CI/CD:** GitHub Actions test suite running on Python 3.10 and 3.11 for vector retrieval and core engine imports.
+
+---
+
+## 🧪 Quick Test & CI Verification
+
+Run the localized engine test:
+
+```bash
+PYTHONPATH=src python -c "from sauti_rag import SautiEngine; print('SautiEngine core operational.')"
+```

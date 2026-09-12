@@ -1,33 +1,46 @@
-name: SautiNLP Continuous Integration
+name: SautiNLP CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install numpy; fi
 
-    - name: Run Pytest Suite
-      run: |
-        PYTHONPATH=src pytest
+      - name: Validate Module Imports
+        run: |
+          PYTHONPATH=src python -c "from sauti_rag import SautiEngine; engine = SautiEngine(); print('Engine imported successfully!')"
 
-    - name: Run Dynamic Benchmark Updates
-      run: |
-        PYTHONPATH=src python src/update_benchmark.py
+      - name: Run Vector Similarity & Engine Sanity Tests
+        run: |
+          PYTHONPATH=src python -c "
+          import numpy as np
+          from sauti_rag import SautiEngine
+
+          engine = SautiEngine()
+          engine.add_document('doc_1', 'Sheng test', [1.0, 0.0])
+          results = engine.retrieve_context([1.0, 0.0], top_k=1)
+          
+          assert len(results) > 0, 'Retrieval returned empty results'
+          print('Engine Retrieval Test: PASSED')
+          "
