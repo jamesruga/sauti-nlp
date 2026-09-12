@@ -3,6 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Framework: Pytest](https://img.shields.io/badge/tested%20with-pytest-0A9EDC.svg)](https://docs.pytest.org/)
+
 SautiNLP is an edge-optimized AI engine designed for Swahili and Sheng dialect speech interpretation, vector indexing, and Retrieval-Augmented Generation (RAG).
 ## The Story Behind SautiNLP
 Standard Natural Language Processing (NLP) models routinely fail when processing East African regional speech due to heavy code-switching between Swahili, English, and urban dialects like Sheng. Developed for low-latency, localized semantic AI in Nairobi and broader East Africa, SautiNLP pairs ultra-fast cloud inference (Groq LPUs) with lightweight local vector math to interpret, index, and retrieve dialect context without demanding heavy GPU compute on local mobile devices.
