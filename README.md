@@ -70,11 +70,17 @@ pip install -r requirements.txt
 ```bash
 export GROQ_API_KEY="your_groq_api_key_here"
 ```
-### 3. Run Interactive CLI & Test Example Phrases
-Launch the CLI tool:
+### 3. Run Interactive CLI, Web UI Endpoint & Test Example Phrases
+Launch the interactive CLI tool:
 ```bash
 PYTHONPATH=src python src/cli.py
 ```
+
+Alternatively, start the local Web UI Endpoint server:
+```bash
+PYTHONPATH=src python src/cli.py --serve
+```
+* Access the interface in your browser at `http://localhost:8080`.
 Try testing these common Sheng/Swahili phrases inside the CLI session:
 * `noma` — Tests slang interpretation (*Dope / Tough / Problem*).
 * `form` — Tests contextual meaning (*Plan / What's up*).
