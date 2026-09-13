@@ -22,6 +22,8 @@ class SautiEngine:
 
     def compute_cosine_similarity(self, vec_a, vec_b):
         """Calculates vector cosine similarity using pure NumPy math."""
+        if len(vec_a) != len(vec_b):
+            return 0.0
         norm_a = np.linalg.norm(vec_a)
         norm_b = np.linalg.norm(vec_b)
         if norm_a == 0 or norm_b == 0:
