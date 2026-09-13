@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: sauti-nlp
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PORT
+        value: "8080"
