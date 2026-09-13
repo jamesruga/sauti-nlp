@@ -1,0 +1,6 @@
+.git
+.github
+venv
+__pycache__
+*.pyc
+benchmarks/history.json
