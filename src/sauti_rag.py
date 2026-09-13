@@ -13,6 +13,12 @@ class SautiEngine:
         }
         self.knowledge_base = []
         self.embeddings = []
+        
+        # Preload default Sheng/Swahili dictionary documents
+        self.add_document("doc_noma", "Noma: Means dangerous, cool, amazing, or a serious situation in Nairobi Sheng.", [0.2, 0.8, 0.4])
+        self.add_document("doc_luku", "Luku: Refers to fashion, outfit, or personal style in Sheng.", [0.5, 0.3, 0.9])
+        self.add_document("doc_mbogi", "Mbogi: Means a group of friends, crew, or gang.", [0.1, 0.9, 0.2])
+        self.add_document("doc_form", "Form: Means a plan, opportunity, or hangout (e.g., 'Ni gani form?').", [0.7, 0.4, 0.1])
 
     def compute_cosine_similarity(self, vec_a, vec_b):
         """Calculates vector cosine similarity using pure NumPy math."""
@@ -27,11 +33,23 @@ class SautiEngine:
         self.knowledge_base.append({"id": doc_id, "text": text})
         self.embeddings.append(np.array(vector, dtype=float))
 
-    def retrieve_context(self, query_vector, top_k=1):
-        """Retrieves top matching document context using dot-product matrix operations."""
+    def retrieve_context(self, query, top_k=1):
+        """Retrieves matching document context supporting both text strings and vectors."""
         if not self.embeddings:
             return []
-        query_vec = np.array(query_vector, dtype=float)
+            
+        if isinstance(query, str):
+            query_lower = query.lower()
+            # Direct keyword matching fallback for text queries
+            for doc in self.knowledge_base:
+                if query_lower in doc["text"].lower():
+                    return [doc]
+            # Fallback pseudo-vector generation for strings
+            val = sum(ord(c) for c in query_lower) % 100 / 100.0
+            query_vec = np.array([val, 0.5, 0.5], dtype=float)
+        else:
+            query_vec = np.array(query, dtype=float)
+
         scores = [self.compute_cosine_similarity(query_vec, doc_vec) for doc_vec in self.embeddings]
         best_indices = np.argsort(scores)[::-1][:top_k]
         return [self.knowledge_base[i] for i in best_indices]
@@ -39,7 +57,7 @@ class SautiEngine:
     def generate_rag_response(self, user_query, context_text):
         """Queries Groq Llama-3 HTTP REST API with retrieved regional context."""
         payload = {
-            "model": "llama-3.3-70b-versatile",
+            "model": "openai/gpt-oss-20b",
             "messages": [
                 {
                     "role": "system",
@@ -67,6 +85,5 @@ class SautiEngine:
 
 if __name__ == "__main__":
     engine = SautiEngine()
-    engine.add_document("doc1", "Sheng phrase 'Niaje Kaka' translates to 'How are you brother'", [0.1, 0.8, 0.3])
-    match = engine.retrieve_context([0.1, 0.75, 0.32], top_k=1)
+    match = engine.retrieve_context("Noma", top_k=1)
     print("Retrieved Context:", match)

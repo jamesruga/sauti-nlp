@@ -17,8 +17,13 @@
     "total_latency_ms": 170.65
   },
   {
-    "timestamp": 1789219512.1710374,
-    "vector_latency_ms": 0.0,
-    "total_latency_ms": 137.91
+    "timestamp": 1789219509.7886598,
+    "vector_latency_ms": 0.01,
+    "total_latency_ms": 730.56
+  },
+  {
+    "timestamp": 1789306054.9411526,
+    "vector_latency_ms": 0.01,
+    "total_latency_ms": 1086.99
   }
 ]
