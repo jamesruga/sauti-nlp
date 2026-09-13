@@ -18,6 +18,7 @@ HTML_PAGE = """<!DOCTYPE html>
         button:hover { background: #1A2B4C; }
         pre { background: #1E293B; color: #E2E8F0; padding: 15px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
     </style>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="box">
@@ -30,6 +31,15 @@ HTML_PAGE = """<!DOCTYPE html>
         <h3>Result:</h3>
         <pre>{result}</pre>
     </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const respEl = document.getElementById("response-content");
+      if (respEl) {
+        respEl.innerHTML = marked.parse(respEl.innerText);
+      }
+    });
+  </script>
 </body>
 </html>
 """
