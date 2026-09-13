@@ -102,3 +102,14 @@ Run the localized engine test:
 ```bash
 PYTHONPATH=src python -c "from sauti_rag import SautiEngine; print('SautiEngine core operational.')"
 ```
+
+
+## 📊 Benchmark History
+
+| Run ID | Timestamp | Status | Latency / Score |
+|---|---|---|---|
+| N/A | 1789218764.4377987 | SUCCESS | N/A |
+| N/A | 1789219365.7958295 | SUCCESS | N/A |
+| N/A | 1789219509.7886598 | SUCCESS | N/A |
+| N/A | 1789306054.9411526 | SUCCESS | N/A |
+| N/A | 1789306657.5291898 | SUCCESS | N/A |
