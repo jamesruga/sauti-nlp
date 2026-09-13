@@ -113,3 +113,40 @@ PYTHONPATH=src python -c "from sauti_rag import SautiEngine; print('SautiEngine 
 | N/A | 1789219509.7886598 | SUCCESS | N/A |
 | N/A | 1789306054.9411526 | SUCCESS | N/A |
 | N/A | 1789306657.5291898 | SUCCESS | N/A |
+
+## 🚀 Cloud Deployment
+
+### Render (Blueprint)
+1. Connect this repository on [Render](https://render.com).
+2. Create a new **Blueprint** instance selecting `render.yaml`.
+3. Add your `GROQ_API_KEY` under the service environment variables.
+
+### Fly.io
+```bash
+fly launch --config fly.toml
+fly secrets set GROQ_API_KEY=your_groq_api_key
+fly deploy
+```
+
+## 💻 Web UI Interface & Output Format
+
+The lightweight web server (`src/web.py`) renders model outputs dynamically using `Marked.js`.
+
+### Sample Output Preview
+
+**Query:** `Mbogi`
+
+---
+
+#### English Explanation
+**Mbogi** refers to a group of friends, crew, or squad in Sheng/Swahili slang.
+* **Usage Context:** Used when referencing your close social circle, peers, or gang.
+* **Example:** "Niko na mbogi ya mtaa." (*I am with my local squad.*)
+
+---
+
+#### Maelezo ya Kiswahili / Sheng
+**Mbogi** inamaanisha kundi la marafiki, squad, au bendi.
+* **Matumizi:** Inatumika sana wakati wa kuzungumzia washkaji wako wa karibu.
+* **Mfano:** "Niko na mbogi ya mtaa."
+---
