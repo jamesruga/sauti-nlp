@@ -40,5 +40,10 @@
     "timestamp": 1789307595.2544198,
     "vector_latency_ms": 0.0,
     "total_latency_ms": 209.59
+  },
+  {
+    "timestamp": 1789307898.160649,
+    "vector_latency_ms": 0.0,
+    "total_latency_ms": 154.59
   }
 ]
